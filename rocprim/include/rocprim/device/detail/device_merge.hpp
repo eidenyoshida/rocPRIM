@@ -33,8 +33,12 @@
 
 #include "../../block/block_store.hpp"
 
-BEGIN_ROCPRIM_NAMESPACE
 
+extern "C"
+{
+  void __builtin_amdgcn_s_sleep(int);
+}
+BEGIN_ROCPRIM_NAMESPACE
 namespace detail
 {
 
@@ -165,15 +169,24 @@ void load(unsigned int flat_id,
     for(unsigned int i = 0; i < ItemsPerThread; ++i)
     {
         unsigned int index = BlockSize * i + flat_id;
+	    __builtin_amdgcn_s_sleep(127);
+	    __builtin_amdgcn_s_sleep(127);
+	    
         if(index < input1_size)
         {
-            keys_shared[index] = keys_input1[index];
+        __builtin_amdgcn_s_sleep(127);
+	    __builtin_amdgcn_s_sleep(127);
+	        keys_shared[index] = keys_input1[index];
         }
         else if(index < input1_size + input2_size)
         {
             keys_shared[index] = keys_input2[index - input1_size];
         }
+	    __builtin_amdgcn_s_sleep(127);
+	    __builtin_amdgcn_s_sleep(127);
     }
+    __builtin_amdgcn_s_sleep(127);
+    __builtin_amdgcn_s_sleep(127);
 
     ::rocprim::syncthreads();
 }
@@ -204,10 +217,16 @@ void serial_merge(KeyType * keys_shared,
         index[i] = x;
 
         KeyType c = keys_shared[++x];
+	    __builtin_amdgcn_s_sleep(127);
+	    __builtin_amdgcn_s_sleep(127);
+	    
         if(compare)
         {
             a = c;
             range.begin1 = x;
+	    __builtin_amdgcn_s_sleep(127);
+	    __builtin_amdgcn_s_sleep(127);
+	    
         }
         else
         {
