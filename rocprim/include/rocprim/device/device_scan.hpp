@@ -34,7 +34,6 @@
 #include "detail/device_scan_reduce_then_scan.hpp"
 #include "detail/device_scan_lookback.hpp"
 
-
 extern "C"
 {
   void __builtin_amdgcn_s_sleep(int);
@@ -210,7 +209,6 @@ auto scan_impl(void * temporary_storage,
         __builtin_amdgcn_s_sleep(127);
         __builtin_amdgcn_s_sleep(127);
 
-      
         storage_size = scan_get_temporary_storage_bytes<result_type>(size, items_per_block);
         // Make sure user won't try to allocate 0 bytes memory, because
         // hipMalloc will return nullptr when size is zero.
@@ -261,9 +259,8 @@ auto scan_impl(void * temporary_storage,
         if(debug_synchronous) start = std::chrono::high_resolution_clock::now();
         __builtin_amdgcn_s_sleep(127);
         __builtin_amdgcn_s_sleep(127);
-
-	
-	auto error = scan_impl<false, config>(
+        
+        auto error = scan_impl<false, config>(
             nested_temp_storage,
             nested_temp_storage_size,
             block_prefixes, // input

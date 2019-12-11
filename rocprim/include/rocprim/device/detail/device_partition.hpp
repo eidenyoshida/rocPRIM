@@ -37,12 +37,12 @@
 #include "lookback_scan_state.hpp"
 #include "ordered_block_id.hpp"
 
-
 extern "C"
 {
   void __builtin_amdgcn_s_sleep(int);
 }
 BEGIN_ROCPRIM_NAMESPACE
+
 namespace detail
 {
 
@@ -576,11 +576,11 @@ void partition_kernel_impl(InputIterator input,
 	    __builtin_amdgcn_s_sleep(127);
         if(flat_block_thread_id == 0)
         {
-	        __builtin_amdgcn_s_sleep(127);
-	        __builtin_amdgcn_s_sleep(127);
+            __builtin_amdgcn_s_sleep(127);
+            __builtin_amdgcn_s_sleep(127);
             offset_scan_state.set_complete(flat_block_id, selected_in_block);
-	        __builtin_amdgcn_s_sleep(127);
-	        __builtin_amdgcn_s_sleep(127);
+            __builtin_amdgcn_s_sleep(127);
+            __builtin_amdgcn_s_sleep(127);
         }
         ::rocprim::syncthreads(); // sync threads to reuse shared memory
     }
@@ -597,8 +597,8 @@ void partition_kernel_impl(InputIterator input,
             offset_scan_state,
             storage_prefix_op
         );
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
         block_scan_offset_type()
             .exclusive_scan(
                 output_indices,
@@ -607,21 +607,18 @@ void partition_kernel_impl(InputIterator input,
                 prefix_op,
                 ::rocprim::plus<offset_type>()
             );
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
-	
-	    ::rocprim::syncthreads(); // sync threads to reuse shared memory
-
-
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        ::rocprim::syncthreads(); // sync threads to reuse shared memory
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
         selected_in_block = prefix_op.get_reduction();
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
         selected_prefix = prefix_op.get_exclusive_prefix();
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
     }
 
     // Scatter selected and rejected values

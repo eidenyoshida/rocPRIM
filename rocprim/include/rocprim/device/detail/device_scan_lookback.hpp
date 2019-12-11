@@ -36,7 +36,6 @@
 #include "lookback_scan_state.hpp"
 #include "ordered_block_id.hpp"
 
-
 extern "C"
 {
   void __builtin_amdgcn_s_sleep(int);
@@ -63,13 +62,11 @@ void init_lookback_scan_state_kernel_impl(LookBackScanState lookback_scan_state,
     // Reset ordered_block_id
     if(id == 0)
     {
-      __builtin_amdgcn_s_sleep(127);
-      __builtin_amdgcn_s_sleep(127);
-      
-      ordered_bid.reset();
-      __builtin_amdgcn_s_sleep(127);
-      __builtin_amdgcn_s_sleep(127);
-      
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        ordered_bid.reset();
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
     }
     // Initialize lookback scan status
     lookback_scan_state.initialize_prefix(id, number_of_blocks);
@@ -246,10 +243,9 @@ void lookback_scan_kernel_impl(InputIterator input,
     // load input values into values
     if(flat_block_id == (number_of_blocks - 1)) // last block
     {
-      __builtin_amdgcn_s_sleep(127);
-      __builtin_amdgcn_s_sleep(127);
-
-      block_load_type()
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        block_load_type()
             .load(
                 input + block_offset,
                 values,
@@ -279,8 +275,8 @@ void lookback_scan_kernel_impl(InputIterator input,
             storage.scan,
             scan_op
         );
-	    __builtin_amdgcn_s_sleep(127);
-	    __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
+        __builtin_amdgcn_s_sleep(127);
 
 	
         if(flat_block_thread_id == 0)
