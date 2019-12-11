@@ -36,7 +36,7 @@
 
 extern "C"
 {
-  void __builtin_amdgcn_s_sleep(int);
+    void __builtin_amdgcn_s_sleep(int);
 }
 BEGIN_ROCPRIM_NAMESPACE
 
