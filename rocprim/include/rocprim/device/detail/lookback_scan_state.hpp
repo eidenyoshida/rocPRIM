@@ -264,7 +264,7 @@ public:
         do
         {
             __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
         
             flag = load_volatile(&prefixes_flags[padding + block_id]);
             ::rocprim::detail::memory_fence_device();
@@ -347,14 +347,14 @@ public:
         do
         {
             __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
 	  
             // reduce last warp_size() number of prefixes to
             // get the complete prefix for this block.
             T partial_prefix;
             reduce_partial_prefixes(previous_block_id, flag, partial_prefix);
             __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
 	    
             if(!is_prefix_initialized)
             {
@@ -367,7 +367,7 @@ public:
             }
             previous_block_id -= ::rocprim::warp_size();
             __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
 	    
             // while we don't load a complete prefix, reduce partial prefixes
         } while(::rocprim::detail::warp_all(flag != PREFIX_COMPLETE));
