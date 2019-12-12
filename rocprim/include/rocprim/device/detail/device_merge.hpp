@@ -185,8 +185,8 @@ void load(unsigned int flat_id,
         __builtin_amdgcn_s_sleep(127);
         __builtin_amdgcn_s_sleep(127);
     }
-    __builtin_amdgcn_s_sleep(127);
-    __builtin_amdgcn_s_sleep(127);
+    // __builtin_amdgcn_s_sleep(127);
+    // __builtin_amdgcn_s_sleep(127);
 
     ::rocprim::syncthreads();
 }

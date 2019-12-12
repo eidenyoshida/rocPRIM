@@ -32,8 +32,6 @@
 #include "device_select_config.hpp"
 #include "detail/device_partition.hpp"
 
-#include "hsa.h"
-
 BEGIN_ROCPRIM_NAMESPACE
 
 /// \addtogroup devicemodule

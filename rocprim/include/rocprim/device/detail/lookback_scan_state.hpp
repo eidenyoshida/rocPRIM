@@ -119,8 +119,8 @@ public:
     {
         if(block_id < number_of_blocks)
         {
-            __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             prefix_type prefix;
             prefix.flag = PREFIX_EMPTY;
             prefix_underlying_type p;
@@ -129,8 +129,8 @@ public:
         }
         if(block_id < padding)
         {
-            __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
 
             prefix_type prefix;
             prefix.flag = PREFIX_INVALID;
@@ -389,8 +389,8 @@ public:
         // Set complete prefix for next block
         if(::rocprim::lane_id() == 0)
         {
-            __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             scan_state_.set_complete(block_id_, scan_op_(prefix, reduction));
         }
         return prefix;
