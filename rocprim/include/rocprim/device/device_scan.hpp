@@ -34,10 +34,6 @@
 #include "detail/device_scan_reduce_then_scan.hpp"
 #include "detail/device_scan_lookback.hpp"
 
-extern "C"
-{
-    void __builtin_amdgcn_s_sleep(int);
-}
 BEGIN_ROCPRIM_NAMESPACE
 
 /// \addtogroup devicemodule
@@ -206,9 +202,6 @@ auto scan_impl(void * temporary_storage,
     // Calculate required temporary storage
     if(temporary_storage == nullptr)
     {
-        // __builtin_amdgcn_s_sleep(127);
-        // __builtin_amdgcn_s_sleep(127);
-
         storage_size = scan_get_temporary_storage_bytes<result_type>(size, items_per_block);
         // Make sure user won't try to allocate 0 bytes memory, because
         // hipMalloc will return nullptr when size is zero.
@@ -236,10 +229,6 @@ auto scan_impl(void * temporary_storage,
         // of the last block as it will never be used as prefix for other blocks
         auto grid_size = number_of_blocks - 1;
         if(debug_synchronous) start = std::chrono::high_resolution_clock::now();
-        // __builtin_amdgcn_s_sleep(127);
-        // __builtin_amdgcn_s_sleep(127);
-
-	
         hipLaunchKernelGGL(
             HIP_KERNEL_NAME(detail::block_reduce_kernel<
                 config, InputIterator, BinaryFunction, result_type
@@ -257,9 +246,6 @@ auto scan_impl(void * temporary_storage,
         auto nested_temp_storage_size = storage_size - (number_of_blocks * sizeof(result_type));
 
         if(debug_synchronous) start = std::chrono::high_resolution_clock::now();
-        // __builtin_amdgcn_s_sleep(127);
-        // __builtin_amdgcn_s_sleep(127);
-        
         auto error = scan_impl<false, config>(
             nested_temp_storage,
             nested_temp_storage_size,
@@ -377,10 +363,7 @@ auto scan_impl(void * temporary_storage,
         auto ordered_bid = ordered_block_id_type::create(
             reinterpret_cast<ordered_block_id_type::id_type*>(ptr + scan_state_bytes)
         );
-        // __builtin_amdgcn_s_sleep(127);
-        // __builtin_amdgcn_s_sleep(127);
 
-	
         if(debug_synchronous) start = std::chrono::high_resolution_clock::now();
         auto grid_size = (number_of_blocks + block_size - 1)/block_size;
         hipLaunchKernelGGL(
@@ -388,10 +371,6 @@ auto scan_impl(void * temporary_storage,
             dim3(grid_size), dim3(block_size), 0, stream,
             scan_state, number_of_blocks, ordered_bid
         );
-        // __builtin_amdgcn_s_sleep(127);
-        // __builtin_amdgcn_s_sleep(127);
-
-	
         ROCPRIM_DETAIL_HIP_SYNC_AND_RETURN_ON_ERROR("init_lookback_scan_state_kernel", size, start)
 
         if(debug_synchronous) start = std::chrono::high_resolution_clock::now();
