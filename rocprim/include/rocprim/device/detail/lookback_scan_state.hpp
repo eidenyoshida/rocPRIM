@@ -159,14 +159,14 @@ public:
         prefix_type prefix;
         do
         {
-            __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             
             // atomic_add(..., 0) is used to load values atomically
             prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
             __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
             __builtin_amdgcn_s_sleep(127);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
         } while(prefix.flag == PREFIX_EMPTY);
 
         // return
@@ -263,7 +263,7 @@ public:
     {
         do
         {
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             // __builtin_amdgcn_s_sleep(127);
         
             flag = load_volatile(&prefixes_flags[padding + block_id]);
@@ -346,14 +346,14 @@ public:
 
         do
         {
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             // __builtin_amdgcn_s_sleep(127);
 	  
             // reduce last warp_size() number of prefixes to
             // get the complete prefix for this block.
             T partial_prefix;
             reduce_partial_prefixes(previous_block_id, flag, partial_prefix);
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             // __builtin_amdgcn_s_sleep(127);
 	    
             if(!is_prefix_initialized)
@@ -366,7 +366,7 @@ public:
                 prefix = scan_op_(partial_prefix, prefix);
             }
             previous_block_id -= ::rocprim::warp_size();
-            __builtin_amdgcn_s_sleep(127);
+            // __builtin_amdgcn_s_sleep(127);
             // __builtin_amdgcn_s_sleep(127);
 	    
             // while we don't load a complete prefix, reduce partial prefixes

@@ -309,11 +309,11 @@ auto partition_scatter(ValueType (&values)[ItemsPerThread],
         unsigned int selected_item_index = output_indices[i] - selected_prefix;
         unsigned int rejected_item_index = (item_index - selected_item_index) + selected_in_block;
         // index of item in scatter_storage
-	  __builtin_amdgcn_s_sleep(127);
+	//   __builtin_amdgcn_s_sleep(127);
 	//   __builtin_amdgcn_s_sleep(127);
 
         unsigned int scatter_index = is_selected[i] ? selected_item_index : rejected_item_index;
-	  __builtin_amdgcn_s_sleep(127);
+	//   __builtin_amdgcn_s_sleep(127);
 	//   __builtin_amdgcn_s_sleep(127);
 
         scatter_storage[scatter_index] = values[i];
@@ -326,20 +326,20 @@ auto partition_scatter(ValueType (&values)[ItemsPerThread],
         unsigned int item_index = (i * BlockSize) + flat_block_thread_id;
         unsigned int selected_item_index = item_index;
         unsigned int rejected_item_index = item_index - selected_in_block;
-	  __builtin_amdgcn_s_sleep(127);
+	//   __builtin_amdgcn_s_sleep(127);
 	//   __builtin_amdgcn_s_sleep(127);
 
         // number of values rejected in previous blocks
         unsigned int rejected_prefix = (flat_block_id * items_per_block) - selected_prefix;
         // destination index of item scatter_storage[item_index] in output
-	  __builtin_amdgcn_s_sleep(127);
+	//   __builtin_amdgcn_s_sleep(127);
 	//   __builtin_amdgcn_s_sleep(127);
 	
         OffsetType scatter_index = item_index < selected_in_block
             ? selected_prefix + selected_item_index
             : size - (rejected_prefix + rejected_item_index + 1);
 
-	  __builtin_amdgcn_s_sleep(127);
+	//   __builtin_amdgcn_s_sleep(127);
 	//   __builtin_amdgcn_s_sleep(127);
         // last block can store only valid_in_last_block items
         if(!is_last_block || item_index < valid_in_last_block)
@@ -546,10 +546,10 @@ void partition_kernel_impl(InputIterator input,
     #pragma unroll
     for(unsigned int i = 0; i < items_per_thread; i++)
     {
-        __builtin_amdgcn_s_sleep(127);
+        // __builtin_amdgcn_s_sleep(127);
         // __builtin_amdgcn_s_sleep(127);
         output_indices[i] = is_selected[i] ? 1 : 0;
-        __builtin_amdgcn_s_sleep(127);
+        // __builtin_amdgcn_s_sleep(127);
         // __builtin_amdgcn_s_sleep(127);
     }
     // __builtin_amdgcn_s_sleep(127);
