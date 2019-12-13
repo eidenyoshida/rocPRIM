@@ -157,7 +157,7 @@ public:
             // atomic_add(..., 0) is used to load values atomically
             prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
             __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
-            __builtin_amdgcn_s_sleep(8);
+            __builtin_amdgcn_s_sleep(12);
         } while(prefix.flag == PREFIX_EMPTY);
 
         // return
