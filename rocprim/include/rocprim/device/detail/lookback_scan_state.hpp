@@ -153,17 +153,21 @@ public:
     {
         prefix_type prefix;
         
-        const uint SLEEP_MAX = 24;
-        uint times_through = 1;
+        #ifdef __HIP_ARCH_GFX908__
+            const uint SLEEP_MAX = 24;
+            uint times_through = 1;
+        #endif
 
         prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
         __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
         while(prefix.flag == PREFIX_EMPTY)
         {
-            for (int j = 0; j < times_through; j++)
-                __builtin_amdgcn_s_sleep(1);
-            if (times_through < SLEEP_MAX)
-                times_through++;
+            #ifdef __HIP_ARCH_GFX908__
+                for (int j = 0; j < times_through; j++)
+                    __builtin_amdgcn_s_sleep(1);
+                if (times_through < SLEEP_MAX)
+                    times_through++;
+            #endif
             // atomic_add(..., 0) is used to load values atomically
             prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
             __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
