@@ -152,9 +152,13 @@ public:
     void get(const unsigned int block_id, flag_type& flag, T& value)
     {
         prefix_type prefix;
-        const uint SLEEP_MAX = 16;
-        uint times_through = 0;
-        do
+        
+        const uint SLEEP_MAX = 24;
+        uint times_through = 1;
+
+        prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
+        __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
+        while(prefix.flag == PREFIX_EMPTY)
         {
             for (int j = 0; j < times_through; j++)
                 __builtin_amdgcn_s_sleep(1);
@@ -163,7 +167,7 @@ public:
             // atomic_add(..., 0) is used to load values atomically
             prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
             __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
-        } while(prefix.flag == PREFIX_EMPTY);
+        }
 
         // return
         flag = prefix.flag;
