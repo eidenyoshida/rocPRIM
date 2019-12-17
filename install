@@ -105,7 +105,7 @@ fi
 # before 'cmake' or setting cmake option 'CMAKE_CXX_COMPILER' to path to the HCC compiler.
 #
 
-compiler="hcc"
+compiler="hipcc"
 if [[ "${build_hip_clang}" == true ]]; then
     compiler="hipcc"
 fi
