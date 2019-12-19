@@ -62,12 +62,12 @@ enum prefix_flag
 // a look-back prefix scan. Initially every prefix can be either
 // invalid (padding values) or empty. One thread in a block should
 // later set it to partial, and later to complete.
-template<class T, bool IsSmall = (sizeof(T) <= 4)>
+template<class T, bool UseSleep = false, bool IsSmall = (sizeof(T) <= 4)>
 struct lookback_scan_state;
 
 // Packed flag and prefix value are loaded/stored in one atomic operation.
-template<class T>
-struct lookback_scan_state<T, true>
+template<class T, bool UseSleep>
+struct lookback_scan_state<T, UseSleep, true>
 {
 private:
     using flag_type_ = char;
@@ -153,21 +153,20 @@ public:
     {
         prefix_type prefix;
         
-        #ifdef __HIP_ARCH_GFX908__
-            const uint SLEEP_MAX = 24;
-            uint times_through = 1;
-        #endif
+        const uint SLEEP_MAX = 24;
+        uint times_through = 1;
 
         prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
         __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
         while(prefix.flag == PREFIX_EMPTY)
         {
-            #ifdef __HIP_ARCH_GFX908__
+            if (UseSleep)
+            {
                 for (int j = 0; j < times_through; j++)
                     __builtin_amdgcn_s_sleep(1);
                 if (times_through < SLEEP_MAX)
                     times_through++;
-            #endif
+            }
             // atomic_add(..., 0) is used to load values atomically
             prefix_underlying_type p = ::rocprim::detail::atomic_add(&prefixes[padding + block_id], 0);
             __builtin_memcpy(&prefix, &p, sizeof(prefix_type));
@@ -193,8 +192,8 @@ private:
 
 // Flag, partial and final prefixes are stored in separate arrays.
 // Consistency ensured by memory fences between flag and prefixes load/store operations.
-template<class T>
-struct lookback_scan_state<T, false>
+template<class T, bool UseSleep>
+struct lookback_scan_state<T, UseSleep, false>
 {
 private:
     static constexpr unsigned int padding = ::rocprim::warp_size();
