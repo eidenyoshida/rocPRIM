@@ -264,11 +264,25 @@ public:
     ROCPRIM_DEVICE inline
     void get(const unsigned int block_id, flag_type& flag, T& value)
     {
-        do
+
+        const uint SLEEP_MAX = 24;
+        uint times_through = 1;
+
+        flag = load_volatile(&prefixes_flags[padding + block_id]);
+        ::rocprim::detail::memory_fence_device();
+        while(flag == PREFIX_EMPTY)
         {
+            if (UseSleep)
+            {
+                for (int j = 0; j < times_through; j++)
+                    __builtin_amdgcn_s_sleep(1);
+                if (times_through < SLEEP_MAX)
+                    times_through++;
+            }
+
             flag = load_volatile(&prefixes_flags[padding + block_id]);
             ::rocprim::detail::memory_fence_device();
-        } while(flag == PREFIX_EMPTY);
+        } 
 
         if(flag == PREFIX_PARTIAL)
             value = load_volatile(&prefixes_partial_values[padding + block_id]);
